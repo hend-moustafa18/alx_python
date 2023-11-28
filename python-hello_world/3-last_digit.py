@@ -9,4 +9,3 @@ elif lastdigit == 0:
       print("Last digit of", number, "is", lastdigit, "and is 0") 
 else: 
     print("Last digit of", number, "is", lastdigit, "and is less than 6 and not 0") 
-
