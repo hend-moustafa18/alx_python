@@ -1,7 +1,7 @@
 def reverse_string(string):
-    reversed_string = ""
+    result = ""
 
     for char in string[::-1]:
-        reversed_string += char
+        result += char
 
-    return reversed_string
+    return result
