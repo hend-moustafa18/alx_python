@@ -9,4 +9,3 @@ def is_prime(number):
         i += 1
 
     return True
-print(is_prime(15))
