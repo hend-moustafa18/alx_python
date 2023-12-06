@@ -1,5 +1,4 @@
 def add(a, b):
-   a = 1
-   b = 2
-   c = add(a, b)
-   return c
+   a = "first integer"
+   b = "second integer"
+   return (a + b)
