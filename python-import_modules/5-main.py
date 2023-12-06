@@ -5,4 +5,4 @@ try:
     message = "C is fun"
     raise_exception_msg(message)
 except NameError as ne:
-    print(message)
+    print(ne)
