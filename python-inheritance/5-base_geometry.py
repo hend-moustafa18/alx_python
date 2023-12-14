@@ -1,5 +1,11 @@
+"""Empty class"""
+class meta_class(type):
+    def __dir__(cls):
+        return [attr for attr in super().__dir__() if
+                attr != '__init_subclass__']
+
 """Defines class BaseGeometry."""
-class BaseGeometry:
+class BaseGeometry(metaclass=meta_class):
     """define Public instance method."""
     def __dir__(cls):
         """Removing __init_subclass__ attribute
