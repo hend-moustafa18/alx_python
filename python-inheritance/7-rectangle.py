@@ -3,7 +3,8 @@ BaseGeometry = __import__('5-base_geometry').BaseGeometry
 
 
 class Rectangle(BaseGeometry):
-
+    """Represent a rectangle using BaseGeometry."""
+    
     def __dir__(cls):
         """Removing __init_subclass__ attribute
         from the dir result to pass the check
