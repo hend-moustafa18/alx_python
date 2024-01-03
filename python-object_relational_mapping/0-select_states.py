@@ -2,11 +2,28 @@
 # Usage: ./0-select_states.py <mysql username> \
 #                             <mysql password> \
 #                             <database name>
-import sys
 import MySQLdb
 
+def filter_states(username, password, database_name):
+    """Lists states with names starting with 'N' from the specified database."""
+
+    db = MySQLdb.connect(
+        host="localhost",
+        user=username,
+        passwd=password,
+        db=database_name,
+        port=3306
+    )
+
+    cursor = db.cursor()
+    cursor.execute("SELECT id, name FROM states WHERE name LIKE 'N%' ORDER BY id ASC")
+    results = cursor.fetchall()
+
+    for row in results:
+        print(row)
+
+    db.close()
+
+# Example usage:
 if __name__ == "__main__":
-    db = MySQLdb.connect(user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
-    c = db.cursor()
-    c.execute("SELECT * FROM `states`")
-    [print(state) for state in c.fetchall()]
+    filter_states("root", "root", "hbtn_0e_0_usa")
