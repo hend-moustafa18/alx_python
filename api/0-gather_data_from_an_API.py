@@ -12,7 +12,8 @@ def fetch_employee_data(employee_id):
         todo_response = requests.get(todo_url)
         todo_response.raise_for_status()
     except requests.exceptions.HTTPError as e:
-        print(f"Error: {e}")
+        error_msg = f"Error: {e}"
+        print(f"{error_msg.ljust(26)}")
         sys.exit(1)
 
     employee_data = employee_response.json()
@@ -22,13 +23,15 @@ def fetch_employee_data(employee_id):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
+        usage_msg = "Usage: python3 0-gather_data_from_an_API.py <employee_id>"
+        print(f"{usage_msg.ljust(26)}")
         sys.exit(1)
 
     try:
         employee_id = int(sys.argv[1])
     except ValueError:
-        print("Employee ID must be an integer.")
+        error_msg = "Employee ID must be an integer."
+        print(f"{error_msg.ljust(26)}")
         sys.exit(1)
 
     employee_data, todo_data = fetch_employee_data(employee_id)
