@@ -21,10 +21,10 @@ def fetch_employee_data(employee_id):
 
     return employee_data, todo_data
 
-def display_todo_progress(employee_name, completed_tasks, total_tasks, task_titles):
+def display_todo_progress(employee_name, completed_tasks, total_tasks, task_data):
     print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
-    for title in task_titles:
-        print(f"\t{title[:50]:<50}")
+    for task in task_data:
+        print(f"\t{task['title'][:50]:<50}")
 
 def main():
     if len(sys.argv) != 2:
@@ -44,9 +44,8 @@ def main():
     employee_name = employee_data.get("name")
     total_tasks = len(todo_data)
     completed_tasks = sum(1 for task in todo_data if task.get("completed"))
-    task_titles = [task.get('title') for task in todo_data]
 
-    display_todo_progress(employee_name, completed_tasks, total_tasks, task_titles)
+    display_todo_progress(employee_name, completed_tasks, total_tasks, todo_data)
 
 if __name__ == "__main__":
     main()
