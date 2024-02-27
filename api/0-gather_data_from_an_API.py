@@ -24,7 +24,7 @@ def fetch_employee_data(employee_id):
 def display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles):
     print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
     for title in completed_task_titles:
-        print(f"\t{title}")
+        print(f"\t{title[:50]:<50}")
 
 def main():
     if len(sys.argv) != 2:
