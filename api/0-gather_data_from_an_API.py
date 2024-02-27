@@ -23,7 +23,7 @@ def display_todo_progress(employee_data, todo_data):
 
     for task in todo_data:
         if task['completed']:
-            print(f'\t{task["title"]}')
+            print(f'\t{task["title"]} (OK)')
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
