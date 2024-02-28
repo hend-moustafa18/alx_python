@@ -22,7 +22,7 @@ def fetch_employee_data(employee_id):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
+        print("Usage: python3 script_name.py <employee_id>")
         sys.exit(1)
 
     try:
@@ -37,7 +37,7 @@ def main():
     total_tasks = len(todo_data)
     completed_tasks = sum(1 for task in todo_data if task.get("completed"))
 
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
+    print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
     for task in todo_data:
         if task.get("completed"):
             print(f"\t{task.get('title')}")
