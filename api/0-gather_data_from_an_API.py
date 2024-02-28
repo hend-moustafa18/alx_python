@@ -20,14 +20,9 @@ def fetch_employee_data(employee_id):
 
     return employee_data, todo_data
 
-def display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles):
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
-    for title in completed_task_titles:
-        print(f"    {title}")
-
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 script_name.py <employee_id>")
+        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
         sys.exit(1)
 
     try:
@@ -41,9 +36,12 @@ def main():
     employee_name = employee_data.get("name")
     total_tasks = len(todo_data)
     completed_tasks = sum(1 for task in todo_data if task.get("completed"))
-    completed_task_titles = [task.get('title') for task in todo_data if task.get("completed")]
 
-    display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles)
+    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
+    for task in todo_data:
+        if task.get("completed"):
+            print(f"\t{task.get['title']}")
 
 if __name__ == "__main__":
     main()
+    
