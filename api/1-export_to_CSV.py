@@ -1,6 +1,6 @@
 import csv
-import sys
 import requests
+import sys
 
 def get_user_tasks(user_id):
     # Make a request to the API to get user's tasks
