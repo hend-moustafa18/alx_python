@@ -22,7 +22,8 @@ def fetch_employee_data(employee_id):
     return employee_data, todo_data
 
 def display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles):
-    print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
+    progress_line = f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):"
+    print(f"{progress_line[:26]:<26}")
     for title in completed_task_titles:
         print(f"\t{title}")
 
