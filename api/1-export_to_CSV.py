@@ -1,4 +1,5 @@
 import csv
+import os
 import requests
 import sys
 
@@ -35,6 +36,20 @@ def export_to_csv(user_id, tasks):
     
     print(f"CSV file '{filename}' has been created successfully.")
 
+def count_tasks_in_csv(user_id):
+    # Check if the CSV file exists
+    filename = f"{user_id}.csv"
+    if os.path.exists(filename):
+        # Open the CSV file and count the number of tasks
+        with open(filename, 'r') as f:
+            reader = csv.reader(f)
+            # Subtract 1 to exclude the header row
+            num_tasks = len(list(reader)) - 1
+            return num_tasks
+    else:
+        print(f"Error: CSV file '{filename}' not found.")
+        sys.exit(1)
+
 def main():
     if len(sys.argv) != 2:
         print("Usage: python3 export_to_CSV.py <user_id>")
@@ -48,5 +63,10 @@ def main():
     # Export tasks to CSV
     export_to_csv(user_id, tasks)
 
+    # Count the number of tasks in CSV
+    num_tasks = count_tasks_in_csv(user_id)
+    print(f"Number of tasks in CSV: {num_tasks}")
+
 if __name__ == "__main__":
     main()
+    
