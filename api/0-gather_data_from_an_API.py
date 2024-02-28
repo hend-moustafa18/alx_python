@@ -42,11 +42,5 @@ def main():
         if task.get("completed"):
             print(f"\t{task.get('title')}")
 
-def display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles):
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
-    for title in completed_task_titles:
-        print(f"    {title}")
-    display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles)
-
 if __name__ == "__main__":
     main()
