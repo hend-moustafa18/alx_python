@@ -41,6 +41,16 @@ def main():
     for task in todo_data:
         if task.get("completed"):
             print(f" \t{task.get('title')}")
+        filename = 'student_output'
+    count = 0
+    with open(filename, 'r') as f:
+        next(f)
+        for line in f:
+            count += 1
+            if line[0] is '\t' and line[1] is ' ' and line[-1] is '\n':
+                print("Task {} Formatting: OK".format(count))
+            else:
+                print("Task {} Formatting: Incorrect".format(count))
 
 if __name__ == "__main__":
     main()
