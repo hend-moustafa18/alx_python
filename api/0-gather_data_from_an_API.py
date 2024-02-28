@@ -37,8 +37,7 @@ def main():
     total_tasks = len(todo_data)
     completed_tasks = sum(1 for task in todo_data if task.get("completed"))
 
-    progress_line = f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):"
-    print(f"{progress_line[:26]:<26}")
+    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
     for task in todo_data:
         if task.get("completed"):
             print(f"\t{task.get('title')}")
