@@ -1,8 +1,5 @@
-#!/usr/bin/python3
 import requests
 import sys
-users_url = "https://jsonplaceholder.typicode.com/users"
-todos_url = "https://jsonplaceholder.typicode.com/todos"
 
 def fetch_employee_data(employee_id):
     base_url = "https://jsonplaceholder.typicode.com/"
@@ -24,28 +21,11 @@ def fetch_employee_data(employee_id):
 
     return employee_data, todo_data
 
-def display_todo_progress(employee_name, completed_tasks, total_tasks, task_data):
+def display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles):
     print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
-    for task in task_data:
-        print(f"\t{task['title'][:50]:<50}")
+    for title in completed_task_titles:
+        print(f"\t{title}")
 
-def check_tasks(id):
-    """ Fetch user name, number of tasks """
-
-    resp = requests.get(todos_url).json()
-
-    filename = 'student_output'
-    count = 0
-    with open(filename, 'r') as f:
-        output = f.read()
-        for task_data in resp:
-            if task_data['completed'] and task_data['userId'] == id:
-                task = task_data['title']
-                count += 1
-                if output.find(task) != -1:
-                    print("Task {} in output: OK".format(count))
-                else:
-                    print("Task {} not in output".format(count))
 def main():
     if len(sys.argv) != 2:
         usage_msg = "Usage: python3 script_name.py <employee_id>"
@@ -64,8 +44,9 @@ def main():
     employee_name = employee_data.get("name")
     total_tasks = len(todo_data)
     completed_tasks = sum(1 for task in todo_data if task.get("completed"))
+    completed_task_titles = [task.get('title') for task in todo_data if task.get("completed")]
 
-    display_todo_progress(employee_name, completed_tasks, total_tasks, todo_data)
+    display_todo_progress(employee_name, completed_tasks, total_tasks, completed_task_titles)
 
 if __name__ == "__main__":
     main()
