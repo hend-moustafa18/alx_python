@@ -12,7 +12,7 @@ def getData(id):
     tasks_response = requests.get(todos_url)
     tasks = tasks_response.json()
 
-    csv_filename = "8.csv"  # Use a fixed filename
+    csv_filename = f"{id}.csv"  # Use a dynamic filename based on USER_ID
 
     with open(csv_filename, "w", newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
