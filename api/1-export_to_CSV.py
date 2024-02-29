@@ -49,7 +49,10 @@ def user_info(employee_id):
             task_count = sum(1 for line in f)
         print("Number of tasks in CSV: OK")
     else:
-        print(f"File {filename} does not exist. Please make sure the file is created.")
+        print(f"File {filename} does not exist. Creating an empty file.")
+        with open(filename, 'w') as f:
+            f.write("USER_ID,USERNAME,TASK_COMPLETED_STATUS,TASK_TITLE\n")
+        print("File created successfully.")
 
 def main():
     if len(sys.argv) != 2:
