@@ -6,6 +6,7 @@ and export data in the CSV format.
 """
 
 import csv
+import json
 import requests
 from sys import argv
 
