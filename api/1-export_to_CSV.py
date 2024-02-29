@@ -3,24 +3,22 @@ import requests
 import sys
 
 def getData(id):
-    usersur1 = "https://jsonplaceholder.typicode.com/users/{}".format(id)
-    todour1 = "{}/todos".format(usersur1)
+    users_url = "https://jsonplaceholder.typicode.com/users/{}".format(id)
+    todos_url = "{}/todos".format(users_url)
 
-    request1 = requests.get(usersur1)
-    result = request1.json()
-    userid = result['id']
-    username = result['username']
+    user_response = requests.get(users_url)
+    user_data = user_response.json()
 
-    request2 = requests.get(todour1)
-    tasks = request2.json()
+    tasks_response = requests.get(todos_url)
+    tasks = tasks_response.json()
 
-    csv_filename = "{}.csv".format(userid)  # Use a dynamic filename
+    csv_filename = "{}.csv".format(id)  # Use a dynamic filename
 
-    with open(csv_filename, "w", newline= '') as csvfile:
+    with open(csv_filename, "w", newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
         for task in tasks:
-            writer.writerow([userid, username, task['completed'], task['title']])
+            writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
     # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
     with open(csv_filename, 'r') as f:
