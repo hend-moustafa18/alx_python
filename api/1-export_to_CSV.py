@@ -21,17 +21,17 @@ def getData(id):
         for task in tasks:
             writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
-    # Verify the CSV file by checking its existence and number of rows
+    # Verify the CSV file by checking its existence and comparing the number of rows
     if os.path.exists(csv_filename):
         with open(csv_filename, 'r') as f:
-            num_rows = sum(1 for _ in f)
+            num_rows = sum(1 for _ in csv.reader(f))  # Use csv.reader to count rows
             if num_rows == len(tasks) + 1:  # Add 1 for the header row
                 print("Number of tasks in CSV: OK")
             else:
                 print("Number of tasks in CSV: Incorrect")
     else:
         print("CSV file not found")
-
+        
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         id = int(sys.argv[1])
