@@ -44,7 +44,8 @@ def user_info(employee_id):
 
     if os.path.exists(filename):
         with open(filename, 'r') as f:
-            # Your existing logic to count tasks
+            # Skip header row and count tasks
+            next(f)  # skip header
             task_count = sum(1 for line in f)
         print(f"Number of tasks in CSV: OK")
     else:
@@ -70,3 +71,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
