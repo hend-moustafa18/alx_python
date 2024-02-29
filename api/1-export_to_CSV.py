@@ -41,5 +41,10 @@ def main():
 
     print(f"Data has been exported to {csv_filename}")
 
+    # Create a symbolic link named '8.csv' pointing to the generated file
+    expected_filename = os.path.abspath("8.csv")
+    if not os.path.exists(expected_filename):
+        os.symlink(csv_filename, expected_filename)
+
 if __name__ == "__main__":
     main()
