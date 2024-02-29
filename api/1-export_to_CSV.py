@@ -1,4 +1,5 @@
 import csv
+import os
 import requests
 import sys
 
@@ -38,9 +39,20 @@ def export_to_csv(employee_id, employee_name, todo_data):
 
     print(f"Data exported to {filename}")
 
+def user_info(employee_id):
+    filename = f"{employee_id}.csv"
+
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            # Your existing logic to count tasks
+            task_count = sum(1 for line in f)
+        print(f"Number of tasks in CSV: {task_count}")
+    else:
+        print("No tasks found in CSV.")
+
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 1-export_to_CSV.py <employee_id>")
+        print("Usage: python3 main.py <employee_id>")
         sys.exit(1)
 
     try:
@@ -54,6 +66,7 @@ def main():
     employee_name = employee_data.get("name")
 
     export_to_csv(employee_id, employee_name, todo_data)
+    user_info(employee_id)
 
 if __name__ == "__main__":
     main()
