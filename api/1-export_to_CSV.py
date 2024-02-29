@@ -27,10 +27,11 @@ def getData(id):
         csv_reader = csv.reader(f)
         next(csv_reader)  # Skip the header
         num_tasks_in_csv = sum(1 for _ in csv_reader)
-        if num_tasks_in_csv == len(tasks):
-            print("Number of tasks in CSV: OK")
-        else:
-            print("Number of tasks in CSV: Incorrect")
+
+    if num_tasks_in_csv == len(tasks):
+        print("Number of tasks in CSV: OK")
+    else:
+        print("Number of tasks in CSV: Incorrect")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
