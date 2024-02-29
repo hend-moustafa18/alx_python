@@ -42,6 +42,7 @@ def export_to_csv(employee_id, username, todo_data):
                 "TASK_TITLE": task.get("title")
             })
 
+    print(f"Exported data to {filename}")
     return filename
 
 if __name__ == "__main__":
