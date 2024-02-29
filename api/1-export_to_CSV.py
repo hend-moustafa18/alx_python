@@ -1,5 +1,4 @@
 import csv
-import os
 import requests
 import sys
 
@@ -25,38 +24,22 @@ def fetch_employee_data(employee_id):
 def export_to_csv(employee_id, employee_name, todo_data):
     filename = f"{employee_id}.csv"
 
-    with open(filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+    with open(filename, 'w', newline='') as csvfile:
+        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
+        writer.writeheader()
         for task in todo_data:
-            user_id = employee_id
-            username = employee_name
-            completed_status = str(task.get("completed"))
-            task_title = task.get("title")
-
-            writer.writerow([user_id, username, completed_status, task_title])
-
-    print(f"Data exported to {filename}")
-
-def user_info(employee_id):
-    filename = f"{employee_id}.csv"
-
-    if os.path.exists(filename):
-        with open(filename, 'r') as f:
-            # Skip header row and count tasks
-            next(f)  # skip header
-            task_count = sum(1 for line in f)
-        print("Number of tasks in CSV: OK")
-    else:
-        print(f"File {filename} does not exist. Creating an empty file.")
-        with open(filename, 'w') as f:
-            f.write("USER_ID,USERNAME,TASK_COMPLETED_STATUS,TASK_TITLE\n")
-        print("File created successfully.")
+            writer.writerow({
+                "USER_ID": employee_id,
+                "USERNAME": employee_name,
+                "TASK_COMPLETED_STATUS": str(task.get("completed")),
+                "TASK_TITLE": task.get("title")
+            })
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 main.py <employee_id>")
+        print("Usage: python3 1-export_to_CSV.py <employee_id>")
         sys.exit(1)
 
     try:
@@ -69,8 +52,9 @@ def main():
 
     employee_name = employee_data.get("name")
 
+    # Export data to CSV
     export_to_csv(employee_id, employee_name, todo_data)
-    user_info(employee_id)
+    print(f"Data exported to {employee_id}.csv successfully.")
 
 if __name__ == "__main__":
     main()
