@@ -1,41 +1,20 @@
 import csv
-import requests
-from sys import argv
 
-id = argv[1]
-url1 = f'https://jsonplaceholder.typicode.com/users/{id}/todos'
-empurl = f'https://jsonplaceholder.typicode.com/users/{id}'
+def export_tasks_to_csv(user_id, username, tasks):
+    filename = f"{user_id}.csv"
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+        for task in tasks:
+            writer.writerow([user_id, username, task["completed"], task["title"]])
 
-res1 = requests.get(url1)
-data1 = res1.json()
-
-res2 = requests.get(empurl)
-employeedata = res2.json()
-
-USER_ID = employeedata['id']
-USERNAME = employeedata['username']
-
-# Extracting tasks from JSON response
+# Example data
+user_id = "123"
+username = "example_user"
 tasks = [
-    {
-        "USER_ID": USER_ID,
-        "USERNAME": USERNAME,
-        "TASK_COMPLETED_STATUS": task['completed'],
-        "TASK_TITLE": task['title']
-    }
-    for task in data1
+    {"title": "Task 1", "completed": True},
+    {"title": "Task 2", "completed": False},
+    {"title": "Task 3", "completed": True}
 ]
 
-# Writing to CSV file using DictWriter
-csv_filename = f'{USER_ID}.csv'
-with open(csv_filename, 'w', newline='') as file:
-    fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-    writer = csv.DictWriter(file, fieldnames=fieldnames)
-
-    # Writing header
-    writer.writeheader()
-
-    # Writing rows
-    writer.writerows(tasks)
-
-print(f"Data has been exported to {csv_filename}")
+export_tasks_to_csv(user_id, username, tasks)

@@ -1,0 +1,4 @@
+USER_ID,USERNAME,TASK_COMPLETED_STATUS,TASK_TITLE
+123,example_user,True,Task 1
+123,example_user,False,Task 2
+123,example_user,True,Task 3
