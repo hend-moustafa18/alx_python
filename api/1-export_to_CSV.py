@@ -26,8 +26,10 @@ def getData(id):
 def checkCSVFile(id, csv_filename):
     if os.path.exists(csv_filename):
         print("User ID and Username: OK")
+        return True
     else:
         print("User ID and Username: Incorrect")
+        return False
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -36,4 +38,7 @@ if __name__ == "__main__":
         id = 1
 
     csv_filename = getData(id)
-    checkCSVFile(id, csv_filename)
+    if checkCSVFile(id, csv_filename):
+        sys.exit(0)
+    else:
+        sys.exit(1)
