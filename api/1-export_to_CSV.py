@@ -16,7 +16,7 @@ def getData(id):
     csv_filename = f"{id}.csv"  # Use a dynamic filename based on USER_ID
 
     with open(csv_filename, "w", newline='') as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)  # Use QUOTE_NONNUMERIC to force quoting
         writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
         for task in tasks:
             writer.writerow([id, user_data['username'], task['completed'], task['title']])
@@ -24,7 +24,7 @@ def getData(id):
     # Verify the CSV file by checking its existence and comparing the number of rows
     if os.path.exists(csv_filename):
         with open(csv_filename, 'r') as f:
-            num_rows = len(f.readlines())
+            num_rows = sum(1 for _ in f)  # Use sum to count rows
             if num_rows == len(tasks) + 1:  # Add 1 for the header row
                 print("Number of tasks in CSV: OK")
             else:
