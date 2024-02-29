@@ -1,5 +1,4 @@
 import csv
-import os
 import requests
 import sys
 
@@ -27,13 +26,8 @@ def main():
     response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
     tasks = response.json()
 
-    # Create a dummy '8.csv' file
-    dummy_filename = f"{user_id}.csv"
-    with open(dummy_filename, 'w') as dummy_file:
-        dummy_file.write("")
-
-    # Now proceed with writing the actual CSV file
     csv_filename = f"{user_id}.csv"
+
     with open(csv_filename, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
@@ -43,8 +37,11 @@ def main():
             task_title = task['title']
             csv_writer.writerow([user_id, username, str(task_completed_status), task_title])
 
-    print(f"Data has been exported to {csv_filename}")
+    # Compare the number of tasks obtained from the API with the number of tasks in the CSV
+    if len(tasks) == sum(1 for _ in csv.reader(open(csv_filename))):
+        print("Number of tasks in CSV: OK")
+    else:
+        print("Number of tasks in CSV: Incorrect")
 
 if __name__ == "__main__":
     main()
-    
