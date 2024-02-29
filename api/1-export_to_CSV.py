@@ -1,28 +1,38 @@
+#!/usr/bin/python3
+"""
+Script that, using this REST API, for a given employee ID, returns
+information about his/her TODO list progress
+and export data in the CSV format.
+"""
+
 import csv
 import requests
-import sys
+from sys import argv
 
-def get_data(user_id):
-    user_url = f"https://jsonplaceholder.typicode.com/users/{user_id}"
-    todos_url = f"{user_url}/todos"
-
-    response_user = requests.get(user_url)
-    user_data = response_user.json()
-    username = user_data['username']
-
-    response_todos = requests.get(todos_url)
-    tasks = response_todos.json()
-
-    with open(f"{user_id}.csv", "w", newline='') as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
-        for task in tasks:
-            writer.writerow([user_id, username, task['completed'], task['title']])
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        user_id = int(sys.argv[1])
-    else:
-        print("Usage: python script.py <user_id>")
-        sys.exit(1)
 
-    get_data(user_id)
+    sessionReq = requests.Session()
+
+    idEmp = argv[1]
+    idURL = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(idEmp)
+    nameURL = 'https://jsonplaceholder.typicode.com/users/{}'.format(idEmp)
+
+    employee = sessionReq.get(idURL)
+    employeeName = sessionReq.get(nameURL)
+
+    json_req = employee.json()
+    usr = employeeName.json()['username']
+
+    totalTasks = 0
+
+    for done_tasks in json_req:
+        if done_tasks['completed']:
+            totalTasks += 1
+
+    fileCSV = idEmp + '.csv'
+
+    with open(fileCSV, "w", newline='') as csvfile:
+        write = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_ALL)
+        for i in json_req:
+            write.writerow([idEmp, usr, i.get('completed'), i.get('title')])
