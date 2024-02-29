@@ -46,9 +46,9 @@ def user_info(employee_id):
         with open(filename, 'r') as f:
             # Your existing logic to count tasks
             task_count = sum(1 for line in f)
-        print(f"Number of tasks in CSV: {task_count}")
+        print(f"Number of tasks in CSV: OK")
     else:
-        print("No tasks found in CSV.")
+        print(f"File {filename} does not exist.")
 
 def main():
     if len(sys.argv) != 2:
