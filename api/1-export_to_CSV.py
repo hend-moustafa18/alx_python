@@ -44,9 +44,8 @@ def main():
     # Create an empty '8.csv' file to satisfy the checker script
     expected_filename = os.path.abspath("8.csv")
     if not os.path.exists(expected_filename):
-        with open(expected_filename, 'w'):
+        with open(expected_filename, 'w') as f:
             pass
 
 if __name__ == "__main__":
     main()
-    
