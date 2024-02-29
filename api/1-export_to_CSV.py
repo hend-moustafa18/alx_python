@@ -28,7 +28,7 @@ def fetch_employee_data(employee_id):
 
 def export_to_csv(employee_id, username, todo_data):
     filename = f"{employee_id}.csv"
-
+    print("Before writing to CSV")
     with open(filename, 'w', newline='') as csvfile:
         fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -44,6 +44,7 @@ def export_to_csv(employee_id, username, todo_data):
 
     print(f"Exported data to {filename}")
     return filename
+    print("After writing to CSV")
 
 if __name__ == "__main__":
     if len(argv) != 2:
