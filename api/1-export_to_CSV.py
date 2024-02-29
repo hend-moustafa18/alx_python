@@ -1,5 +1,4 @@
 import csv
-import os  # Import the os module
 import requests
 import sys
 
@@ -55,21 +54,9 @@ def main():
 
     employee_name = employee_data.get("name")
 
-    # Export data to CSV
+    # Export data to CSV and get the filename
     csv_filename = export_to_csv(employee_id, employee_name, todo_data)
     print(f"Data exported to {csv_filename} successfully.")
 
-    # Check if the CSV file exists before running the checking script
-    if os.path.isfile(csv_filename):
-        print("Number of tasks in CSV: OK")
-    else:
-        print("Number of tasks in CSV: Incorrect")
-
-    # Now you can run the checking script or any other operations
-    # using the exported CSV file.
-    # For example, you can run:
-    # os.system(f"python3 checking_script.py {csv_filename}")
-
 if __name__ == "__main__":
     main()
-    
