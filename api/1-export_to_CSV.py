@@ -21,14 +21,7 @@ def getData(id):
         for task in tasks:
             writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
-    # Verify the CSV file by checking its existence and comparing the number of rows
-    if os.path.exists(csv_filename):
-        print("User ID and Username: OK")
-    else:
-        print("User ID and Username: Incorrect")
-
-    # Return the filename to use in the CSV checker script
-    return csv_filename
+    return csv_filename  # Return the filename to use in the CSV checker script
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -36,4 +29,10 @@ if __name__ == "__main__":
     else:
         id = 1
 
-    getData(id)
+    csv_filename = getData(id)
+
+    # Check if the CSV file exists
+    if os.path.exists(csv_filename):
+        print("User ID and Username: OK")
+    else:
+        print("User ID and Username: Incorrect")
