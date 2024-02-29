@@ -1,4 +1,6 @@
 import csv
+import requests
+from sys import argv
 
 def export_tasks_to_csv(user_id, username, tasks):
     filename = f"{user_id}.csv"
@@ -12,13 +14,5 @@ def export_tasks_to_csv(user_id, username, tasks):
     except Exception as e:
         print(f"Error: {e}")
 
-# Example data
-user_id = "123"
-username = "example_user"
-tasks = [
-    {"title": "Task 1", "completed": True},
-    {"title": "Task 2", "completed": False},
-    {"title": "Task 3", "completed": True}
-]
-
+# Call the function to export tasks to CSV
 export_tasks_to_csv(user_id, username, tasks)

@@ -4,38 +4,24 @@ Script that, using this REST API, for a given employee ID, returns
 information about his/her TODO list progress
 and export data in the JSON format.
 """
-
 import json
-import requests
-from sys import argv
 
+def export_tasks_to_json(user_id, username, tasks):
+    data = {user_id: []}
+    for task in tasks:
+        data[user_id].append({"task": task["title"], "completed": task["completed"], "username": username})
 
-if __name__ == "__main__":
+    filename = f"{user_id}.json"
+    with open(filename, 'w') as file:
+        json.dump(data, file, indent=4)
 
-    sessionReq = requests.Session()
+# Example data
+user_id = "123"
+username = "example_user"
+tasks = [
+    {"title": "Task 1", "completed": True},
+    {"title": "Task 2", "completed": False},
+    {"title": "Task 3", "completed": True}
+]
 
-    idEmp = argv[1]
-    idURL = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(idEmp)
-    nameURL = 'https://jsonplaceholder.typicode.com/users/{}'.format(idEmp)
-
-    employee = sessionReq.get(idURL)
-    employeeName = sessionReq.get(nameURL)
-
-    json_req = employee.json()
-    usr = employeeName.json()['username']
-
-    totalTasks = []
-    updateUser = {}
-
-    for all_Emp in json_req:
-        totalTasks.append(
-            {
-                "task": all_Emp.get('title'),
-                "completed": all_Emp.get('completed'),
-                "username": usr,
-            })
-    updateUser[idEmp] = totalTasks
-
-    file_Json = idEmp + ".json"
-    with open(file_Json, 'w') as f:
-        json.dump(updateUser, f)
+export_tasks_to_json(user_id, username, tasks)
