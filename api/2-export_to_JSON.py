@@ -1,11 +1,5 @@
 #!/usr/bin/python3
-
-import json
-import requests
-import sys
-
-def get_user_info(employee_id):
-    """
+'''
     Retrieve user information (ID and username) using the given employee_id.
     
     Args:
@@ -13,46 +7,41 @@ def get_user_info(employee_id):
         
     Returns:
         Tuple[int, str]: A tuple containing the user's ID and username.
-    """
-    user_response = requests.get(f"https://jsonplaceholder.typicode.com/users/{employee_id}")
-    if user_response.status_code == 200:
-        user_data = user_response.json()
-        return user_data['id'], user_data['username']
-    else:
-        return None, None
+'''
+import json
+import requests
+import sys
 
-def main():
-    """
-    Main function to export user tasks to a JSON file.
-    """
-    if len(sys.argv) != 2:
-        print("Usage: python3 2-export_to_JSON.py <employee_id>")
-        sys.exit(1)
+def getData(id):
+    users_url = f"https://jsonplaceholder.typicode.com/users/{id}"
+    todos_url = f"{users_url}/todos"
 
-    employee_id = sys.argv[1]
+    user_response = requests.get(users_url)
+    user_data = user_response.json()
 
-    user_id, username = get_user_info(employee_id)
+    if not user_data:
+        print(f"User with ID {id} not found.")
+        return
 
-    if user_id is None:
-        print(f"User with ID {employee_id} not found.")
-        sys.exit(1)
+    username = user_data['username']
 
-    response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
-    tasks = response.json()
+    todos_response = requests.get(todos_url)
+    tasks = todos_response.json()
 
-    json_data = {user_id: []}
+    json_data = {str(id): [{"task": task['title'], "completed": task['completed'], "username": username} for task in tasks]}
 
-    for task in tasks:
-        task_completed_status = task['completed']
-        task_title = task['title']
-        json_data[user_id].append({"task": task_title, "completed": task_completed_status, "username": username})
+    json_filename = f"{id}.json"
 
-    json_filename = f"{user_id}.json"
-
-    with open(json_filename, 'w') as jsonfile:
+    with open(json_filename, "w") as jsonfile:
         json.dump(json_data, jsonfile, indent=2)
 
     print(f"Data has been exported to {json_filename}")
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        id = int(sys.argv[1])
+    else:
+        print("Usage: python3 script.py <employee_id>")
+        sys.exit(1)
+
+    getData(id)
