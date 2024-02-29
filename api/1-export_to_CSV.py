@@ -47,9 +47,12 @@ def user_info(employee_id):
             # Skip header row and count tasks
             next(f)  # skip header
             task_count = sum(1 for line in f)
-        print(f"Number of tasks in CSV: OK")
+        print("Number of tasks in CSV: OK")
     else:
         print(f"File {filename} does not exist.")
+
+# Example usage
+user_info(8)  # Replace 8 with the desired employee ID
 
 def main():
     if len(sys.argv) != 2:
@@ -71,4 +74,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
