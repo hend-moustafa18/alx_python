@@ -1,45 +1,41 @@
 import csv
+import os
 import requests
 import sys
 
-def getData(id):
-    users_url = f"https://jsonplaceholder.typicode.com/users/{id}"
-    todos_url = f"{users_url}/todos"
 
-    user_response = requests.get(users_url)
-    user_data = user_response.json()
 
-    tasks_response = requests.get(todos_url)
-    tasks = tasks_response.json()
+def get_employee_todo_progress(employee_id):
+    # Fetch employee details
+    employee_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+    response = requests.get(employee_url)
+    employee_data = response.json()
+    employee_name = employee_data['username']  # Changed from 'name' to 'username'
 
-    csv_filename = f"{id}.csv"
-    create_empty_csv(csv_filename)
+    # Fetch TODO list for the employee
+    todos_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}/todos"
+    response = requests.get(todos_url)
+    todos = response.json()
 
-    with open(csv_filename, "w", newline='') as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-        for task in tasks:
-            writer.writerow([id, user_data['username'], task['completed'], task['title']])
+    # Create CSV file name
+    csv_filename = os.path.join(os.getcwd(), f"{employee_id}.csv")  # Specify full path for the CSV file
 
-    with open(csv_filename, 'r') as f:
-        csv_reader = csv.reader(f)
-        next(csv_reader)
-        num_tasks_in_csv = sum(1 for _ in csv_reader)
+    # Write data to CSV file
+    with open(csv_filename, 'w', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        
+        # Write each task to CSV
+        for todo in todos:
+            csv_writer.writerow([employee_id, employee_name, todo['completed'], todo['title']])
 
-    if num_tasks_in_csv == len(tasks):
-        print("Number of tasks in CSV: OK")
-    else:
-        print("Number of tasks in CSV: Incorrect")
-
-def create_empty_csv(filename):
-    with open(filename, "w", newline='') as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+    
+    return csv_filename
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        id = int(sys.argv[1])
-    else:
-        id = 1
-
-    getData(id)
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <employee_id>")
+        sys.exit(1)
+    
+    employee_id = int(sys.argv[1])
+    csv_filename = get_employee_todo_progress(employee_id)
+    
