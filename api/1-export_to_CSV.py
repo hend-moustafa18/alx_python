@@ -23,16 +23,18 @@ def getData(id):
 
     return csv_filename  # Return the filename to use in the CSV checker script
 
+def checkCSVFile(id):
+    csv_filename = f"{id}.csv"
+    if os.path.exists(csv_filename):
+        print("User ID and Username: OK")
+    else:
+        print("User ID and Username: Incorrect")
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         id = int(sys.argv[1])
     else:
         id = 1
 
-    csv_filename = getData(id)
-
-    # Check if the CSV file exists
-    if os.path.exists(csv_filename):
-        print("User ID and Username: OK")
-    else:
-        print("User ID and Username: Incorrect")
+    getData(id)
+    checkCSVFile(id)
