@@ -23,8 +23,7 @@ def getData(id):
 
     return csv_filename  # Return the filename to use in the CSV checker script
 
-def checkCSVFile(id):
-    csv_filename = f"{id}.csv"
+def checkCSVFile(id, csv_filename):
     if os.path.exists(csv_filename):
         print("User ID and Username: OK")
     else:
@@ -36,5 +35,5 @@ if __name__ == "__main__":
     else:
         id = 1
 
-    getData(id)
-    checkCSVFile(id)
+    csv_filename = getData(id)
+    checkCSVFile(id, csv_filename)
