@@ -14,7 +14,7 @@ def getData(id):
     request2 = requests.get(todour1)
     tasks = request2.json()
 
-    csv_filename = "1.csv"  # Use a fixed filename
+    csv_filename = "{}.csv".format(userid)  # Use a dynamic filename
 
     with open(csv_filename, "w", newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
