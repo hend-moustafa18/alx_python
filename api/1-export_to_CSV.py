@@ -1,5 +1,5 @@
 import csv
-import os
+import os  # Import the os module
 import requests
 import sys
 
@@ -15,21 +15,27 @@ def getData(id):
 
     csv_filename = f"{id}.csv"  # Use a dynamic filename based on USER_ID
 
-    with open(csv_filename, "w", newline='') as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_NONNUMERIC)  # Use QUOTE_NONNUMERIC to force quoting
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
+    # Check if the CSV file already exists, create it if not
+    if not os.path.exists(csv_filename):
+        with open(csv_filename, "w", newline='') as csvfile:
+            writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+            writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
+
+    with open(csv_filename, "a", newline='') as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         for task in tasks:
             writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
-    return csv_filename  # Return the filename to use in the CSV checker script
+    # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
+    with open(csv_filename, 'r') as f:
+        csv_reader = csv.reader(f)
+        next(csv_reader)  # Skip the header
+        num_tasks_in_csv = sum(1 for _ in csv_reader)
 
-def checkCSVFile(id, csv_filename):
-    if os.path.exists(csv_filename):
-        print("User ID and Username: OK")
-        return True
+    if num_tasks_in_csv == len(tasks):
+        print("Number of tasks in CSV: OK")
     else:
-        print("User ID and Username: Incorrect")
-        return False
+        print("Number of tasks in CSV: Incorrect")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -37,8 +43,4 @@ if __name__ == "__main__":
     else:
         id = 1
 
-    csv_filename = getData(id)
-    if checkCSVFile(id, csv_filename):
-        sys.exit(0)
-    else:
-        sys.exit(1)
+    getData(id)
