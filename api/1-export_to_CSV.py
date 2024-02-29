@@ -1,5 +1,4 @@
 import csv
-import os
 import requests
 import sys
 
@@ -19,12 +18,14 @@ def getData(id):
 
     with open(csv_filename, "w", newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
         for task in tasks:
             writer.writerow([userid, username, task['completed'], task['title']])
 
     # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
     with open(csv_filename, 'r') as f:
         csv_reader = csv.reader(f)
+        next(csv_reader)  # Skip the header
         num_tasks_in_csv = sum(1 for _ in csv_reader)
         if num_tasks_in_csv == len(tasks):
             print("Number of tasks in CSV: OK")
