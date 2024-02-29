@@ -15,9 +15,7 @@ def getData(id):
     request2 = requests.get(todour1)
     tasks = request2.json()
 
-    # Specify the full path to the CSV file using os.path.join
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(current_dir, "{}.csv".format(userid))
+    filename = "{}.csv".format(userid)
     
     with open(filename, "w" , newline='') as csvfile:
         writer = csv.writer(csvfile, quoting = csv.QUOTE_ALL)
@@ -34,3 +32,4 @@ if __name__ == "__main__":
     
     csv_filename = getData(id)
     print(f"CSV file created: {csv_filename}")
+    
