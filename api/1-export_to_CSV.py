@@ -28,18 +28,12 @@ def main():
     tasks = response.json()
 
     # Create a dummy '8.csv' file
-    dummy_filename = os.path.abspath("8.csv")
+    dummy_filename = f"{user_id}.csv"
     with open(dummy_filename, 'w') as dummy_file:
         dummy_file.write("")
 
-    with open(dummy_filename, 'r') as f:
-        # Read the dummy file to satisfy the checker
-        content = f.read()
-
-    print("User ID and Username: OK")
-
-    # Now you can proceed to write the actual CSV file
-    csv_filename = os.path.abspath(f"{employee_id}.csv")
+    # Now proceed with writing the actual CSV file
+    csv_filename = f"{user_id}.csv"
     with open(csv_filename, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
@@ -53,3 +47,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
