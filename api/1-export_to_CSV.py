@@ -13,7 +13,7 @@ def fetch_employee_data(employee_id):
         todo_response = requests.get(todo_url)
         todo_response.raise_for_status()
     except requests.exceptions.HTTPError as e:
-        print(f"Error: {e}")
+        print(f"Error fetching data: {e}")
         sys.exit(1)
 
     employee_data = employee_response.json()
@@ -24,18 +24,23 @@ def fetch_employee_data(employee_id):
 def export_to_csv(employee_id, employee_name, todo_data):
     filename = f"{employee_id}.csv"
 
-    with open(filename, 'w', newline='') as csvfile:
-        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    try:
+        with open(filename, 'w', newline='') as csvfile:
+            fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-        writer.writeheader()
-        for task in todo_data:
-            writer.writerow({
-                "USER_ID": employee_id,
-                "USERNAME": employee_name,
-                "TASK_COMPLETED_STATUS": str(task.get("completed")),
-                "TASK_TITLE": task.get("title")
-            })
+            writer.writeheader()
+            for task in todo_data:
+                writer.writerow({
+                    "USER_ID": employee_id,
+                    "USERNAME": employee_name,
+                    "TASK_COMPLETED_STATUS": str(task.get("completed")),
+                    "TASK_TITLE": task.get("title")
+                })
+
+        print(f"Data exported to {filename} successfully.")
+    except Exception as e:
+        print(f"Error exporting data to CSV: {e}")
 
 def main():
     if len(sys.argv) != 2:
@@ -54,7 +59,6 @@ def main():
 
     # Export data to CSV
     export_to_csv(employee_id, employee_name, todo_data)
-    print(f"Data exported to {employee_id}.csv successfully.")
 
 if __name__ == "__main__":
     main()
