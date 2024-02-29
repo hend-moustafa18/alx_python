@@ -15,7 +15,7 @@ def getData(id):
 
     csv_filename = f"{id}.csv"  # Use a dynamic filename based on USER_ID
 
-    with open(csv_filename, "w", newline='') as csvfile:
+    with open(csv_filename, "wb") as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
         for task in tasks:
