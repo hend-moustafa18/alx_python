@@ -3,8 +3,8 @@ import requests
 import sys
 
 def getData(id):
-    users_url = "https://jsonplaceholder.typicode.com/users/{}".format(id)
-    todos_url = "{}/todos".format(users_url)
+    users_url = f"https://jsonplaceholder.typicode.com/users/{id}"
+    todos_url = f"{users_url}/todos"
 
     user_response = requests.get(users_url)
     user_data = user_response.json()
