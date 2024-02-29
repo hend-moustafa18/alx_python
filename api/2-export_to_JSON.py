@@ -14,8 +14,11 @@ import sys
 
 def get_user_info(employee_id):
     user_response = requests.get(f"https://jsonplaceholder.typicode.com/users/{employee_id}")
-    user_data = user_response.json() if user_response.status_code == 200 else None
-    return user_data.get('id'), user_data.get('username') if user_data else (None, None)
+    if user_response.status_code == 200:
+        user_data = user_response.json()
+        return user_data['id'], user_data['username']
+    else:
+        return None, None
 
 def export_to_json(employee_id, username, todo_data):
     json_data = {str(employee_id): [{"task": task['title'], "completed": task['completed'], "username": username} for task in todo_data]}
@@ -31,25 +34,19 @@ def main():
         print("Usage: python3 script.py <employee_id>")
         sys.exit(1)
 
-    try:
-        employee_id = int(sys.argv[1])
-        user_id, username = get_user_info(employee_id)
+    employee_id = int(sys.argv[1])
 
-        if user_id is None:
-            print(f"User with ID {employee_id} not found.")
-            sys.exit(1)
+    user_id, username = get_user_info(employee_id)
 
-        response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
-        tasks = response.json()
-
-        export_to_json(employee_id, username, tasks)
-
-    except ValueError:
-        print("Invalid employee_id. Please provide a valid integer.")
+    if user_id is None:
+        print(f"User with ID {employee_id} not found.")
         sys.exit(1)
-    except requests.RequestException as e:
-        print(f"Error fetching data: {e}")
-        sys.exit(1)
+
+    response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
+    tasks = response.json()
+
+    export_to_json(employee_id, username, tasks)
 
 if __name__ == "__main__":
     main()
+
