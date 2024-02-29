@@ -1,74 +1,26 @@
-#!/usr/bin/python3
-"""
-Script that, using this REST API, for a given employee ID, returns
-information about his/her TODO list progress
-and export data in the JSON format.
-"""
 import csv
-import requests
-import sys
+import requests 
+from sys import argv
 
-def fetch_employee_data(employee_id):
-    base_url = "https://jsonplaceholder.typicode.com/"
-    employee_url = f"{base_url}users/{employee_id}"
-    todo_url = f"{base_url}users/{employee_id}/todos"
+id = argv[1]
+url1 = f'https://jsonplaceholder.typicode.com/users/{id}/todos'
+empurl= f'https://jsonplaceholder.typicode.com/users/{id}'
 
-    try:
-        employee_response = requests.get(employee_url)
-        employee_response.raise_for_status()
-        todo_response = requests.get(todo_url)
-        todo_response.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        print(f"Error: {e}")
-        sys.exit(1)
+res1 = requests.get(url1)
+data1 = res1.json()
 
-    employee_data = employee_response.json()
-    todo_data = todo_response.json()
+res2 = requests.get(empurl)
+employeedata = res2.json()
 
-    return employee_data, todo_data
+USER_ID = employeedata['id']
+USERNAME = employeedata['username']
+TASK_COMPLETED_STATUS = ''
+TOTAL_NUMBER_OF_TASKS = len(data1)
+TASK_TITLE = ''
 
-def export_to_csv(user_id, username, todo_data):
-    filename = f"{user_id}.csv"
-    with open(filename, 'w', newline='') as csvfile:
-        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        writer.writeheader()
-
-        for task in todo_data:
-            writer.writerow({
-                "USER_ID": user_id,
-                "USERNAME": username,
-                "TASK_COMPLETED_STATUS": str(task.get("completed")),
-                "TASK_TITLE": task.get("title")
-            })
-
-    print(f"CSV file '{filename}' has been created successfully.")
-
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: python3 script_name.py <employee_id>")
-        sys.exit(1)
-
-    try:
-        employee_id = int(sys.argv[1])
-    except ValueError:
-        print("Employee ID must be an integer.")
-        sys.exit(1)
-
-    employee_data, todo_data = fetch_employee_data(employee_id)
-
-    employee_name = employee_data.get("name")
-
-    export_to_csv(employee_id, employee_name, todo_data)
-
-    total_tasks = len(todo_data)
-    completed_tasks = sum(1 for task in todo_data if task.get("completed"))
-
-    print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
-    for task in todo_data:
-        if task.get("completed"):
-            print(f"\t {task.get('title')}")
-
-if __name__ == "__main__":
-    main()
+with open(f'{USER_ID}.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(len(data1)):
+        TASK_COMPLETED_STATUS = data1[i]['completed']
+        TASK_TITLE = data1[i]['title']
+        writer.writerow([USER_ID,USERNAME,TASK_COMPLETED_STATUS,TASK_TITLE])
