@@ -1,41 +1,74 @@
+#!/usr/bin/python3
+"""
+Script that, using this REST API, for a given employee ID, returns
+information about his/her TODO list progress
+and export data in the JSON format.
+"""
 import csv
 import requests
 import sys
 
-def getData(id):
-    usersur1 = "https://jsonplaceholder.typicode.com/users/{}".format(id)
-    todour1 = "{}/todos".format(usersur1)
+def fetch_employee_data(employee_id):
+    base_url = "https://jsonplaceholder.typicode.com/"
+    employee_url = f"{base_url}users/{employee_id}"
+    todo_url = f"{base_url}users/{employee_id}/todos"
 
-    request1 = requests.get(usersur1)
-    result = request1.json()
-    userid = result['id']
-    username = result['username']
+    try:
+        employee_response = requests.get(employee_url)
+        employee_response.raise_for_status()
+        todo_response = requests.get(todo_url)
+        todo_response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
-    request2 = requests.get(todour1)
-    tasks = request2.json()
+    employee_data = employee_response.json()
+    todo_data = todo_response.json()
 
-    csv_filename = "{}.csv".format(userid)  # Use a dynamic filename
+    return employee_data, todo_data
 
-    with open(csv_filename, "w", newline='') as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
-        for task in tasks:
-            writer.writerow([userid, username, task['completed'], task['title']])
+def export_to_csv(user_id, username, todo_data):
+    filename = f"{user_id}.csv"
+    with open(filename, 'w', newline='') as csvfile:
+        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-    # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
-    with open(csv_filename, 'r') as f:
-        csv_reader = csv.reader(f)
-        next(csv_reader)  # Skip the header
-        num_tasks_in_csv = sum(1 for _ in csv_reader)
+        writer.writeheader()
 
-    if num_tasks_in_csv == len(tasks):
-        print("Number of tasks in CSV: OK")
-    else:
-        print("Number of tasks in CSV: Incorrect")
+        for task in todo_data:
+            writer.writerow({
+                "USER_ID": user_id,
+                "USERNAME": username,
+                "TASK_COMPLETED_STATUS": str(task.get("completed")),
+                "TASK_TITLE": task.get("title")
+            })
+
+    print(f"CSV file '{filename}' has been created successfully.")
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 script_name.py <employee_id>")
+        sys.exit(1)
+
+    try:
+        employee_id = int(sys.argv[1])
+    except ValueError:
+        print("Employee ID must be an integer.")
+        sys.exit(1)
+
+    employee_data, todo_data = fetch_employee_data(employee_id)
+
+    employee_name = employee_data.get("name")
+
+    export_to_csv(employee_id, employee_name, todo_data)
+
+    total_tasks = len(todo_data)
+    completed_tasks = sum(1 for task in todo_data if task.get("completed"))
+
+    print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
+    for task in todo_data:
+        if task.get("completed"):
+            print(f"\t {task.get('title')}")
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        id = int(sys.argv[1])
-    else:
-        id = 1
-    getData(id)
+    main()
