@@ -1,26 +1,24 @@
 import csv
-import os
 import requests
 import sys
 
 def getData(id):
-    usersur1 = "https://jsonplaceholder.typicode.com/users/{}".format(id)
-    todour1 = "{}/todos".format(usersur1)
+    users_url = "https://jsonplaceholder.typicode.com/users/{}".format(id)
+    todos_url = "{}/todos".format(users_url)
 
-    request1 = requests.get(usersur1)
-    result = request1.json()
-    userid = result['id']
-    username = result['username']
+    response_user = requests.get(users_url)
+    user_data = response_user.json()
+    username = user_data['username']
 
-    request2 = requests.get(todour1)
-    tasks = request2.json()
+    response_todos = requests.get(todos_url)
+    todos = response_todos.json()
 
-    filename = "{}.csv".format(userid)
+    filename = "{}.csv".format(id)
     
     with open(filename, "w" , newline='') as csvfile:
         writer = csv.writer(csvfile, quoting = csv.QUOTE_ALL)
-        for task in tasks:
-            writer.writerow([userid, username, task['completed'], task['title']])
+        for task in todos:
+            writer.writerow([id, username, task['completed'], task['title']])
 
     return filename
 
@@ -32,4 +30,3 @@ if __name__ == "__main__":
     
     csv_filename = getData(id)
     print(f"CSV file created: {csv_filename}")
-    
