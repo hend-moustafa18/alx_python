@@ -40,9 +40,6 @@ def export_to_csv(employee_id, employee_name, todo_data):
     print(f"Data exported to {filename}")
 
 def user_info(employee_id):
-    # Print current working directory
-    print("Current Working Directory:", os.getcwd())
-
     filename = f"{employee_id}.csv"
 
     if os.path.exists(filename):
@@ -52,11 +49,7 @@ def user_info(employee_id):
             task_count = sum(1 for line in f)
         print("Number of tasks in CSV: OK")
     else:
-        print(f"File {filename} does not exist.")
-        print("Files in current directory:", os.listdir())
-
-# Example usage
-user_info(8)  # Replace 8 with the desired employee ID
+        print(f"File {filename} does not exist. Please make sure the file is created.")
 
 def main():
     if len(sys.argv) != 2:
