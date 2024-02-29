@@ -3,25 +3,20 @@ import os  # Import the os module
 import requests
 import sys
 
-def create_empty_csv(user_id):
-    csv_filename = f"{user_id}.csv"
-    with open(csv_filename, "w", newline='') as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-
 def getData(id):
-    create_empty_csv(id)  # Call create_empty_csv to create an empty CSV file if it doesn't exist
-
     users_url = f"https://jsonplaceholder.typicode.com/users/{id}"
     todos_url = f"{users_url}/todos"
+
+    # Check if the CSV file exists, create an empty one if not
+    csv_filename = f"{id}.csv"
+    if not os.path.exists(csv_filename):
+        create_empty_csv(id)
 
     user_response = requests.get(users_url)
     user_data = user_response.json()
 
     tasks_response = requests.get(todos_url)
     tasks = tasks_response.json()
-
-    csv_filename = f"{id}.csv"
 
     with open(csv_filename, "w", newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
@@ -38,6 +33,12 @@ def getData(id):
         print("Number of tasks in CSV: OK")
     else:
         print("Number of tasks in CSV: Incorrect")
+
+def create_empty_csv(user_id):
+    csv_filename = f"{user_id}.csv"
+    with open(csv_filename, "w", newline='') as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
