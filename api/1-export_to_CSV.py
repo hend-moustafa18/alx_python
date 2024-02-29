@@ -65,5 +65,11 @@ def main():
     else:
         print("Number of tasks in CSV: Incorrect")
 
+    # Now you can run the checking script or any other operations
+    # using the exported CSV file.
+    # For example, you can run:
+    # os.system(f"python3 checking_script.py {csv_filename}")
+
 if __name__ == "__main__":
     main()
+    
