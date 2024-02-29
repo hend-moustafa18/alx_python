@@ -1,41 +1,48 @@
 import csv
+import os
 import requests
 import sys
 
-def export_to_csv(employee_id, username, todo_data):
-    filename = f"{employee_id}.csv"  # Use the same naming convention
+def get_user_info(employee_id):
+    user_response = requests.get(f"https://jsonplaceholder.typicode.com/users/{employee_id}")
+    if user_response.status_code == 200:
+        user_data = user_response.json()
+        return user_data['id'], user_data['username']
+    else:
+        return None, None
 
-    with open(filename, 'w', newline='') as csvfile:
-        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 1-export_to_CSV.py <employee_id>")
+        sys.exit(1)
 
-        writer.writeheader()
-        for task in todo_data:
-            writer.writerow({
-                "USER_ID": employee_id,
-                "USERNAME": username,
-                "TASK_COMPLETED_STATUS": str(task.get("completed")),
-                "TASK_TITLE": task.get("title")
-            })
+    employee_id = sys.argv[1]
 
-    print(f"Exported data to {filename}")
-    return filename
+    user_id, username = get_user_info(employee_id)
+
+    if user_id is None:
+        print(f"User with ID {employee_id} not found.")
+        sys.exit(1)
+
+    response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
+    tasks = response.json()
+
+    # Specify absolute path for CSV file
+    csv_filename = f"/path/to/directory/{user_id}.csv"
+
+    # Print current working directory
+    print("Current Working Directory:", os.getcwd())
+
+    with open(csv_filename, 'w', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+
+        for task in tasks:
+            task_completed_status = task['completed']
+            task_title = task['title']
+            csv_writer.writerow([user_id, username, str(task_completed_status), task_title])
+
+    print(f"Data has been exported to {csv_filename}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 script.py <employee_id>")
-        sys.exit(1)
-
-    try:
-        employee_id = int(sys.argv[1])
-    except ValueError:
-        print("Employee ID must be an integer.")
-        sys.exit(1)
-
-    employee_data, todo_data = fetch_employee_data(employee_id)
-
-    employee_name = employee_data.get("name")
-
-    # Export data to CSV and get the filename
-    csv_filename = export_to_csv(employee_id, employee_name, todo_data)
-    print(f"Data exported to {csv_filename} successfully.")
+    main()
