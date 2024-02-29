@@ -24,8 +24,7 @@ def getData(id):
     # Verify the CSV file by checking its existence and number of rows
     if os.path.exists(csv_filename):
         with open(csv_filename, 'r') as f:
-            csv_reader = csv.reader(f)
-            num_rows = sum(1 for row in csv_reader)
+            num_rows = sum(1 for _ in f)
             if num_rows == len(tasks) + 1:  # Add 1 for the header row
                 print("Number of tasks in CSV: OK")
             else:
@@ -40,3 +39,4 @@ if __name__ == "__main__":
         id = 1
 
     getData(id)
+    
