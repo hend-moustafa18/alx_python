@@ -26,7 +26,7 @@ def getData(id):
         with open(csv_filename, 'r') as f:
             csv_reader = csv.reader(f)
             num_rows = sum(1 for row in csv_reader)
-            if num_rows - 1 == len(tasks):  # Subtract 1 for the header row
+            if num_rows == len(tasks) + 1:  # Add 1 for the header row
                 print("Number of tasks in CSV: OK")
             else:
                 print("Number of tasks in CSV: Incorrect")
