@@ -1,4 +1,5 @@
 import csv
+import os  # Import the os module
 import requests
 import sys
 
@@ -36,4 +37,10 @@ if __name__ == "__main__":
         id = int(sys.argv[1])
     else:
         id = 1
+
+    # Check if the CSV file already exists, delete it
+    csv_filename = f"{id}.csv"
+    if os.path.exists(csv_filename):
+        os.remove(csv_filename)
+
     getData(id)
