@@ -1,18 +1,41 @@
 import csv
 import requests
-from sys import argv
+import sys
 
-def export_tasks_to_csv(user_id, username, tasks):
-    filename = f"{user_id}.csv"
-    try:
-       with open(filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+def getData(id):
+    usersur1 = "https://jsonplaceholder.typicode.com/users/{}".format(id)
+    todour1 = "{}/todos".format(usersur1)
+
+    request1 = requests.get(usersur1)
+    result = request1.json()
+    userid = result['id']
+    username = result['username']
+
+    request2 = requests.get(todour1)
+    tasks = request2.json()
+
+    csv_filename = "{}.csv".format(userid)  # Use a dynamic filename
+
+    with open(csv_filename, "w", newline='') as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
         for task in tasks:
-            writer.writerow([user_id, username, task["completed"], task["title"]])
-        print(f"CSV file {filename} created successfully.")
-    except Exception as e:
-        print(f"Error: {e}")
+            writer.writerow([userid, username, task['completed'], task['title']])
 
-# Call the function to export tasks to CSV
-export_tasks_to_csv(user_id, username, tasks)
+    # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
+    with open(csv_filename, 'r') as f:
+        csv_reader = csv.reader(f)
+        next(csv_reader)  # Skip the header
+        num_tasks_in_csv = sum(1 for _ in csv_reader)
+
+    if num_tasks_in_csv == len(tasks):
+        print("Number of tasks in CSV: OK")
+    else:
+        print("Number of tasks in CSV: Incorrect")
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        id = int(sys.argv[1])
+    else:
+        id = 1
+    getData(id)
