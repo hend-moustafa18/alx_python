@@ -1,58 +1,29 @@
-#!/usr/bin/python3
-"""
-Script that, using this REST API, for a given employee ID, returns
-information about his/her TODO list progress
-and exports data in the CSV format.
-"""
-
 import csv
 import requests
-from sys import argv
+import sys
 
-def fetch_employee_data(employee_id):
-    base_url = "https://jsonplaceholder.typicode.com/"
-    todo_url = f"{base_url}users/{employee_id}/todos"
-    user_url = f"{base_url}users/{employee_id}"
+def getData(id):
+    usersur1 = "https://jsonplaceholder.typicode.com/users/{}".format(id)
+    todour1 = "{}/todos".format(usersur1)
 
-    try:
-        todo_response = requests.get(todo_url)
-        todo_response.raise_for_status()
+    request1 = requests.get(usersur1)
+    result = request1.json()
+    userid = result['id']
+    username = result['username']
 
-        user_response = requests.get(user_url)
-        user_response.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        print(f"Error: {e}")
-        return None
+    request2 = requests.get(todour1)
+    tasks = request2.json()
 
-    return todo_response.json(), user_response.json()['username']
 
-def export_to_csv(employee_id, username, todo_data):
-    filename = f"{employee_id}.csv"
-    print("Before writing to CSV")
-    with open(filename, 'w', newline='') as csvfile:
-        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        writer.writeheader()
-        for task in todo_data:
-            writer.writerow({
-                "USER_ID": employee_id,
-                "USERNAME": username,
-                "TASK_COMPLETED_STATUS": str(task.get("completed")),
-                "TASK_TITLE": task.get("title")
-            })
-
-    print(f"Exported data to {filename}")
-    return filename
-    print("After writing to CSV")
-
+    with open("{}.csv".format(userid), "w" , newline='') as csvfile:
+        writer = csv.writer(csvfile, quoting = csv.QUOTE_ALL)
+        for task in tasks:
+            writer.writerow([userid, username, task['completed'], task['title']])
+    
 if __name__ == "__main__":
-    if len(argv) != 2:
-        print("Usage: python3 script.py <employee_id>")
+    if len(sys.argv) > 1:
+        id = int(sys.argv[1])
     else:
-        employee_id = argv[1]
-        todo_data, username = fetch_employee_data(employee_id)
-
-        if todo_data is not None:
-            csv_filename = export_to_csv(employee_id, username, todo_data)
-            print(f"Data exported to {csv_filename} successfully.")
+        id = 1
+    getData(id)
+    
