@@ -15,10 +15,8 @@ def getData(id):
     request2 = requests.get(todour1)
     tasks = request2.json()
 
-    # Get the current working directory
-    current_dir = os.getcwd()
-
-    # Specify the full path to the CSV file
+    # Specify the full path to the CSV file using os.path.join
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(current_dir, "{}.csv".format(userid))
     
     with open(filename, "w" , newline='') as csvfile:
