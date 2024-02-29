@@ -41,11 +41,5 @@ def main():
 
     print(f"Data has been exported to {csv_filename}")
 
-    # Create an empty '8.csv' file to satisfy the checker script
-    expected_filename = os.path.abspath("8.csv")
-    if not os.path.exists(expected_filename):
-        with open(expected_filename, 'w') as f:
-            pass
-
 if __name__ == "__main__":
     main()
