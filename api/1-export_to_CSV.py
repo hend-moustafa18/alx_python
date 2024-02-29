@@ -27,11 +27,8 @@ def main():
     response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
     tasks = response.json()
 
-    # Specify absolute path for CSV file
-    csv_filename = f"/path/to/directory/{user_id}.csv"
-
-    # Print current working directory
-    print("Current Working Directory:", os.getcwd())
+    # Specify an absolute path for the CSV file
+    csv_filename = os.path.abspath(f"/path/to/directory/{user_id}.csv")
 
     with open(csv_filename, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
