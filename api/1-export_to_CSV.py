@@ -1,4 +1,5 @@
 import csv
+import os  # Import the os module
 import requests
 import sys
 
@@ -37,6 +38,8 @@ def export_to_csv(employee_id, employee_name, todo_data):
                 "TASK_TITLE": task.get("title")
             })
 
+    return filename  # Return the filename
+
 def main():
     if len(sys.argv) != 2:
         print("Usage: python3 1-export_to_CSV.py <employee_id>")
@@ -53,10 +56,14 @@ def main():
     employee_name = employee_data.get("name")
 
     # Export data to CSV
-    export_to_csv(employee_id, employee_name, todo_data)
-    print(f"Data exported to {employee_id}.csv successfully.")
+    csv_filename = export_to_csv(employee_id, employee_name, todo_data)
+    print(f"Data exported to {csv_filename} successfully.")
 
-    # Add code to check the CSV file here (if needed)
+    # Check if the CSV file exists before running the checking script
+    if os.path.isfile(csv_filename):
+        print("Number of tasks in CSV: OK")
+    else:
+        print("Number of tasks in CSV: Incorrect")
 
 if __name__ == "__main__":
     main()
