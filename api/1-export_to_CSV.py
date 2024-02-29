@@ -1,5 +1,5 @@
 import csv
-import os  # Import the os module
+import os
 import requests
 import sys
 
@@ -16,11 +16,14 @@ def getData(id):
     csv_filename = f"{id}.csv"  # Use a dynamic filename based on USER_ID
 
     with open(csv_filename, "wb") as csvfile:
-      writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-      writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
-      for task in tasks:
-        writer.writerow([id, user_data['username'], task['completed'], task['title']])
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
+        for task in tasks:
+            writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
+    # Print some debug information
+    print(f"Number of tasks obtained from API: {len(tasks)}")
+    print(f"Number of tasks written to CSV: {num_tasks_in_csv}")
 
     # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
     with open(csv_filename, 'r') as f:
