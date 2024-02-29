@@ -15,21 +15,23 @@ def getData(id):
 
     csv_filename = f"{id}.csv"  # Use a dynamic filename based on USER_ID
 
-    # Check if the CSV file already exists, delete it
-    if os.path.exists(csv_filename):
-        os.remove(csv_filename)
-
     with open(csv_filename, "w", newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
         for task in tasks:
             writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
-    # Verify the CSV file by checking its existence and size
-    if os.path.exists(csv_filename) and os.path.getsize(csv_filename) > 0:
-        print("Number of tasks in CSV: OK")
+    # Verify the CSV file by checking its existence and number of rows
+    if os.path.exists(csv_filename):
+        with open(csv_filename, 'r') as f:
+            csv_reader = csv.reader(f)
+            num_rows = sum(1 for row in csv_reader)
+            if num_rows - 1 == len(tasks):  # Subtract 1 for the header row
+                print("Number of tasks in CSV: OK")
+            else:
+                print("Number of tasks in CSV: Incorrect")
     else:
-        print("Number of tasks in CSV: Incorrect")
+        print("CSV file not found")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
