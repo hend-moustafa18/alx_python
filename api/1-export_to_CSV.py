@@ -1,9 +1,13 @@
+# main_script.py
+
 import csv
-import os  # Import the os module
 import requests
 import sys
+from create_empty_csv import create_empty_csv  # Import the create_empty_csv function
 
 def getData(id):
+    create_empty_csv(id)  # Call create_empty_csv to create an empty CSV file
+
     users_url = f"https://jsonplaceholder.typicode.com/users/{id}"
     todos_url = f"{users_url}/todos"
 
@@ -13,23 +17,17 @@ def getData(id):
     tasks_response = requests.get(todos_url)
     tasks = tasks_response.json()
 
-    csv_filename = f"{id}.csv"  # Use a dynamic filename based on USER_ID
+    csv_filename = f"{id}.csv"
 
-    # Check if the CSV file already exists, create it if not
-    if not os.path.exists(csv_filename):
-        with open(csv_filename, "w", newline='') as csvfile:
-            writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-            writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Add header
-
-    with open(csv_filename, "a", newline='') as csvfile:
+    with open(csv_filename, "w", newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
         for task in tasks:
             writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
-    # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
     with open(csv_filename, 'r') as f:
         csv_reader = csv.reader(f)
-        next(csv_reader)  # Skip the header
+        next(csv_reader)
         num_tasks_in_csv = sum(1 for _ in csv_reader)
 
     if num_tasks_in_csv == len(tasks):
