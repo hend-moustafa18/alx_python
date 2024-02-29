@@ -39,4 +39,3 @@ if __name__ == "__main__":
         id = 1
 
     getData(id)
-    
