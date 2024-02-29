@@ -14,10 +14,14 @@ def getData(id):
     request2 = requests.get(todour1)
     tasks = request2.json()
 
-    with open("{}.csv".format(userid), "w" , newline='') as csvfile:
+    filename = "{}.csv".format(userid)
+    
+    with open(filename, "w" , newline='') as csvfile:
         writer = csv.writer(csvfile, quoting = csv.QUOTE_ALL)
         for task in tasks:
             writer.writerow([userid, username, task['completed'], task['title']])
+
+    return filename
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -25,4 +29,5 @@ if __name__ == "__main__":
     else:
         id = 1
     
-    getData(id)
+    csv_filename = getData(id)
+    print(f"CSV file created: {csv_filename}")
