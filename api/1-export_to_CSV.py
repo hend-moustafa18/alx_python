@@ -25,17 +25,13 @@ def getData(id):
         for task in tasks:
             writer.writerow([id, user_data['username'], task['completed'], task['title']])
 
-    # Check if the number of tasks in CSV is equal to the number of tasks obtained from the API
+    # Check if the tasks in CSV match the tasks obtained from the API
     with open(csv_filename, 'r') as f:
         csv_reader = csv.reader(f)
         next(csv_reader)  # Skip the header
-        num_tasks_in_csv = sum(1 for _ in csv_reader)
+        csv_tasks = list(csv_reader)
 
-    # Print some debug information
-    print(f"Number of tasks obtained from API: {len(tasks)}")
-    print(f"Number of tasks written to CSV: {num_tasks_in_csv}")
-
-    if num_tasks_in_csv == len(tasks):
+    if csv_tasks[0] == ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"] and csv_tasks[1:] == [[str(id), user_data['username'], str(task['completed']), task['title']] for task in tasks]:
         print("Number of tasks in CSV: OK")
     else:
         print("Number of tasks in CSV: Incorrect")
