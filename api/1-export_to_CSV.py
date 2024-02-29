@@ -1,12 +1,16 @@
-# main_script.py
-
 import csv
+import os  # Import the os module
 import requests
 import sys
-from create_empty_csv import create_empty_csv  # Import the create_empty_csv function
+
+def create_empty_csv(user_id):
+    csv_filename = f"{user_id}.csv"
+    with open(csv_filename, "w", newline='') as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
 
 def getData(id):
-    create_empty_csv(id)  # Call create_empty_csv to create an empty CSV file
+    create_empty_csv(id)  # Call create_empty_csv to create an empty CSV file if it doesn't exist
 
     users_url = f"https://jsonplaceholder.typicode.com/users/{id}"
     todos_url = f"{users_url}/todos"
