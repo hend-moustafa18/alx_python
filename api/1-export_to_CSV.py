@@ -26,18 +26,18 @@ def export_to_csv(employee_id, employee_name, todo_data):
 
     with open(filename, 'w', newline='') as csvfile:
         fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer = csv.writer(csvfile)
+        writer.writerow(fieldnames)
 
-        writer.writeheader()
         for task in todo_data:
-            writer.writerow({
-                "USER_ID": employee_id,
-                "USERNAME": employee_name,
-                "TASK_COMPLETED_STATUS": str(task.get("completed")),
-                "TASK_TITLE": task.get("title")
-            })
+            writer.writerow([
+                employee_id,
+                employee_name,
+                str(task.get("completed")),
+                task.get("title")
+            ])
 
-    return filename  # Return the filename
+    print(f"Data exported to {filename} successfully.")
 
 def main():
     if len(sys.argv) != 2:
@@ -54,9 +54,8 @@ def main():
 
     employee_name = employee_data.get("name")
 
-    # Export data to CSV and get the filename
-    csv_filename = export_to_csv(employee_id, employee_name, todo_data)
-    print(f"Data exported to {csv_filename} successfully.")
+    # Export data to CSV
+    export_to_csv(employee_id, employee_name, todo_data)
 
 if __name__ == "__main__":
     main()
