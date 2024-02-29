@@ -1,4 +1,5 @@
 import csv
+import os
 import requests
 import sys
 
@@ -14,7 +15,11 @@ def getData(id):
     request2 = requests.get(todour1)
     tasks = request2.json()
 
-    filename = "{}.csv".format(userid)
+    # Get the current working directory
+    current_dir = os.getcwd()
+
+    # Specify the full path to the CSV file
+    filename = os.path.join(current_dir, "{}.csv".format(userid))
     
     with open(filename, "w" , newline='') as csvfile:
         writer = csv.writer(csvfile, quoting = csv.QUOTE_ALL)
